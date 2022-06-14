@@ -65,8 +65,7 @@ class ServicreditoController extends Controller
             $data = $scapi->getCreditsInfo($id);
             $credits = '';
             foreach ($data['listClienteInfoRespuesta'] as $key => $value) {
-               $credits .= $key. '. '. $value['NumeroCredito'] . ': '. $value['Destino'] . '
-               ';
+               $credits .= $key. '. '. $value['NumeroCredito'] . ': '. $value['Destino'] . '\r\n    ';
             }
             return response()->json([
                 'isSuccess' => true,
