@@ -209,7 +209,7 @@ class ServicreditoController extends Controller
 
             if (!empty($data)) {
                 $uuid =  Str::lower(Str::random(40));
-                $file = Storage::disk('public')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
+                $file = Storage::disk('local')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
                 return response()->json([
                     'isSuccess' => true,
                     'passToAgent' => false,
