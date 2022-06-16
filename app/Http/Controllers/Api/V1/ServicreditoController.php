@@ -180,13 +180,13 @@ class ServicreditoController extends Controller
 
             if (!empty($paymentPlan)) {
                 $uuid =  Str::random(40);
-                Storage::disk('public')->put("plans/$uuid.pdf", base64_decode($paymentPlan['PlanPagosPDF']));
+                $file = Storage::disk('public')->put("plans/$uuid.pdf", base64_decode($paymentPlan['PlanPagosPDF']));
 
 
                 return response()->json([
                     'isSuccess' => true,
                     'passToAgent' => false,
-                    'message' =>  '',
+                    'message' =>  $file,
                     'data' => $uuid
                     ]);
             }
@@ -209,11 +209,11 @@ class ServicreditoController extends Controller
 
             if (!empty($data)) {
                 $uuid =  Str::random(40);
-                Storage::disk('public')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
+                $file = Storage::disk('public')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
                 return response()->json([
                     'isSuccess' => true,
                     'passToAgent' => false,
-                    'message' =>  '',
+                    'message' =>  $file,
                     'data' => $uuid
                     ]);
             }
