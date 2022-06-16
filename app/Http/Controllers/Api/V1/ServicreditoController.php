@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ExternalServices\ServicreditoAPIController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 class ServicreditoController extends Controller
 {
     /**
@@ -164,5 +165,76 @@ class ServicreditoController extends Controller
                 'data' => null
                 ]);
         }
+    }
+
+    public function getPaymentPlan(Request $request)
+    {
+        $scapi = new ServicreditoAPIController();
+        if ($request->json()->all() ) {
+            $params = $request->json()->all();
+            $id = $params['credit'];
+            $data = $scapi->getCreditsInfo($params['identification']);
+            $credit = $data['listClienteInfoRespuesta'][$id];
+            $paymentPlan = $scapi->getPaymentPlan($credit['NumeroCredito']);
+
+
+            if (!empty($paymentPlan)) {
+                $uuid =  Str::random(40);
+                Storage::disk('public')->put("plans/$uuid.pdf", base64_decode($paymentPlan['PlanPagosPDF']));
+
+
+                return response()->json([
+                    'isSuccess' => true,
+                    'passToAgent' => false,
+                    'message' =>  '',
+                    'data' => $uuid
+                    ]);
+            }
+
+        } else {
+            return response()->json([
+                'isSuccess' => false,
+                'passToAgent' => false,
+                'message' => 'Se ha presentado un error consultando los datos del cliente.',
+                'data' => null
+                ]);
+        }
+    }
+
+    public function generateCertificate(Request $request)
+    {
+        $scapi = new ServicreditoAPIController();
+        if ($request->json()->all() ) {
+            $data = $scapi->generateCertificate($request->json()->all());
+
+            if (!empty($data)) {
+                $uuid =  Str::random(40);
+                Storage::disk('public')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
+                return response()->json([
+                    'isSuccess' => true,
+                    'passToAgent' => false,
+                    'message' =>  '',
+                    'data' => $uuid
+                    ]);
+            }
+
+        } else {
+            return response()->json([
+                'isSuccess' => false,
+                'passToAgent' => false,
+                'message' => 'Se ha presentado un error consultando los datos del cliente.',
+                'data' => null
+                ]);
+        }
+    }
+
+    public function downloadPaymentPlan($uuid) {
+        $pathToFile = storage_path('app/public/plans/'. $uuid . '.pdf');
+        return response()->download($pathToFile);
+    }
+
+    public function downloadCertificate($uuid) {
+        $pathToFile = storage_path('app/public/certificates/'. $uuid . '.pdf');
+        return response()->download($pathToFile);
     }
 }

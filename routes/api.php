@@ -25,11 +25,11 @@ Route::prefix('v1/Servicredito')->group(function() {
     Route::controller(ServicreditoController::class)->group(function () {
         Route::get('/getClientInfo/{id}', 'getClientInfo');
         Route::get('/getCreditsInfo/{id}', 'getCreditsInfo');
-        Route::get('/downloadPaymentPlan/{id}', 'downloadPaymentPlan');
         Route::post('/getCreditDetail', 'getCreditDetail');
         Route::post('/loginClient', 'loginClient');
         Route::post('/passwordReset', 'passwordReset');
         Route::post('/getLastPayment', 'getLastPayment');
+        Route::post('/generatePaymentPlan', 'getPaymentPlan');
         Route::post('/generateCertificate', 'generateCertificate');
     });
 });

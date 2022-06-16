@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ServicreditoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/payment/plan/{uuid}/download', [ServicreditoController::class, 'downloadPaymentPlan']);
+Route::get('/certificate/{uuid}/download', [ServicreditoController::class, 'downloadCertificate']);

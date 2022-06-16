@@ -74,4 +74,27 @@ class ServicreditoAPIController extends Controller
         return $response->json();
     }
 
+    public function getPaymentPlan($creditNumber)
+    {
+        $response = Http::withBasicAuth(self::AUTH_USER, self::AUTH_PASS)
+        ->withOptions(['verify' => false])
+        ->post(self::URL . 'EstadoSolicitud/DescargarPlanPago', [
+            'CodigoPagare' => $creditNumber,
+        ]);
+
+        return $response->json();
+    }
+
+    public function generateCertificate($params)
+    {
+        $response = Http::withBasicAuth(self::AUTH_USER, self::AUTH_PASS)
+        ->withOptions(['verify' => false])
+        ->post(self::URL . 'ObligacionesSaldoCero/Generar', [
+            'Identificacion' => $params['identification'],
+            'NombreDestinatario' => $params['destination'],
+        ]);
+
+        return $response->json();
+    }
+
 }
