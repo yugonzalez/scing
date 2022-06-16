@@ -179,7 +179,7 @@ class ServicreditoController extends Controller
 
 
             if (!empty($paymentPlan)) {
-                $uuid =  Str::random(40);
+                $uuid =  Str::lower(Str::random(40));
                 $file = Storage::disk('public')->put("plans/$uuid.pdf", base64_decode($paymentPlan['PlanPagosPDF']));
 
 
@@ -208,7 +208,7 @@ class ServicreditoController extends Controller
             $data = $scapi->generateCertificate($request->json()->all());
 
             if (!empty($data)) {
-                $uuid =  Str::random(40);
+                $uuid =  Str::lower(Str::random(40));
                 $file = Storage::disk('public')->put("certificates/$uuid.pdf", base64_decode($data['SolicitudPDF']));
                 return response()->json([
                     'isSuccess' => true,
